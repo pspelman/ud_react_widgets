@@ -9,7 +9,7 @@ const Convert = ({language, text}) => {
   useEffect(() => {
     const cancelSearch = setTimeout(() => {
       setDebounceSearch(text)
-    }, 300)
+    }, 500)
 
     return () => {
       clearTimeout(cancelSearch)
@@ -31,7 +31,7 @@ const Convert = ({language, text}) => {
     if (text) {
       doTranslation();
     }
-  }, [debounceSearch])
+  }, [debounceSearch, language])
 
   return (
     <React.Fragment>
