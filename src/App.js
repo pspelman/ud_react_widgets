@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Accordion from "./components/Accordion";
+import Search from "./components/Search";
 
 const items = [
   {
@@ -22,10 +23,10 @@ class App extends Component {
       <div>
         <h1>Widget App</h1>
         <br/>
-        <Accordion items={items}/>
+        <Search />
       </div>
     )
   }
 }
-
+//        <Accordion items={items}/>
 export default App
