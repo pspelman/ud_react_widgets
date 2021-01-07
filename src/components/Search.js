@@ -4,7 +4,35 @@ import axios from "axios";
 const Search = () => {
 
   const [term, setTerm] = useState('')
+  const [debouncedTerm, setDebouncedTerm] = useState(term)
   const [results, setResults] = useState([])
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedTerm(term)
+    }, 1000)
+    return () => {
+      clearTimeout(timerId)
+    }
+  }, [term])
+
+  useEffect(() => {
+    const search = async () => {
+      const {data} = await axios.get('https://en.wikipedia.org/w/api.php', {
+        params: {
+          action: 'query',
+          list: 'search',
+          origin: '*',
+          format: 'json',
+          srsearch: term
+        }
+      })
+      console.log(`results: `, data)
+      setResults(data.query.search)
+    }
+
+  }, [debouncedTerm])
+
 
   useEffect(() => {
     console.log(`Running search for term: `, term)
@@ -22,14 +50,19 @@ const Search = () => {
       setResults(data.query.search)
     }
 
-    const timeoutId = setTimeout(() => {
-      if (term) {
-        search()
+    if (term && !results.length) {
+      search();
+    } else {
+      const timeoutId = setTimeout(() => {
+        if (term) {
+          search()
+        }
+      }, 500);
+      return () => {
+        clearTimeout(timeoutId)
       }
-    }, 500)
-    return () => {
-      clearTimeout(timeoutId)
     }
+
   }, [term])
 
   const doSearch = event => {
